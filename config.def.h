@@ -71,16 +71,16 @@ static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont,
 static const char *roficmd[] = { "/usr/bin/rofi", "-show", "combi", NULL };
 static const char *termcmd[]  = { "st", NULL };
 /* function key commands */
-static const char *mutecmd[] = { "pactl", "set-sink-mute", "0", "toggle", NULL };
+static const char *mutecmd[] = { "pactl", "set-sink-mute", "0", "toggle", NULL};
 static const char *volupcmd[] = { "pactl", "set-sink-volume", "0", "+5%", NULL };
 static const char *voldowncmd[] = { "pactl", "set-sink-volume", "0", "-5%", NULL };
-static const char *blupcmd[] = { "xbacklight", "-inc", "10", NULL };
-static const char *bldowncmd[] = { "xbacklight", "-dec", "10", NULL };
+static const char *blupcmd[] = { "xbacklight", "-inc", "5", NULL };
+static const char *bldowncmd[] = { "xbacklight", "-dec", "5", NULL };
+static const char *miccmd[] = { "/home/brett/.local/bin/togglemic", NULL };
 /*
  * static const char *mutecmd[] = { "amixer", "-q", "set", "Master", "toggle", NULL };
  * static const char *volupcmd[] = { "amixer", "-q", "set", "Master", "5%+", "unmute", NULL };
  * static const char *voldowncmd[] = { "amixer", "-q", "set", "Master", "5%-", "unmute", NULL };
- * static const char *miccmd[] = { "amixer", "set", "Capture", "toggle", NULL };
  */
 static const char *xkillcmd[] = { "xkill", NULL };
 
@@ -132,6 +132,7 @@ static Key keys[] = {
 	{ 0,                            XF86XK_AudioRaiseVolume, spawn, {.v = volupcmd } },
 	{ 0,                            XF86XK_MonBrightnessUp, spawn, {.v = blupcmd} },
 	{ 0,                            XF86XK_MonBrightnessDown, spawn, {.v = bldowncmd} },
+	{ 0,                            XF86XK_AudioMicMute, spawn, {.v = miccmd} },
 
 	{ MODKEY|ShiftMask,             XK_q,      spawn,        {.v = xkillcmd} },
 	{ MODKEY,                       XK_space,  spawn,        {.v = roficmd} },
