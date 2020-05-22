@@ -11,7 +11,7 @@ static const char col_gray1[]       = "#2E3440";
 static const char col_gray2[]       = "#3B4252";
 static const char col_gray3[]       = "#D8DEE9";
 static const char col_gray4[]       = "#ECEFF4";
-static const char col_cyan[]        = "#5E81AC";
+static const char col_cyan[]        = "#4C566A";
 static const char *colors[][3]      = {
 	/*               fg         bg         border   */
 	[SchemeNorm] = { col_gray3, col_gray1, col_gray2 },
@@ -45,12 +45,12 @@ static const int resizehints = 1;    /* 1 means respect size hints in tiled resi
 #include "fibonacci.c"
 static const Layout layouts[] = {
 	/* symbol     arrange function */
- 	{ "[f]",      fibonacci },
-	{ "[]=",      tile },    /* first entry is default */
+	/* first entry is default */
+	{ "[@]",      spiral },
+	{ "[\\]",     dwindle },
+	{ "[]=",      tile },    
 	{ "><>",      NULL },    /* no layout function means floating behavior */
 	{ "[M]",      monocle },
- 	{ "[@]",      spiral },
- 	{ "[\\]",     dwindle },
 };
 
 /* key definitions */
