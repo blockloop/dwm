@@ -5,8 +5,8 @@ static const unsigned int borderpx  = 1;        /* border pixel of windows */
 static const unsigned int snap      = 32;       /* snap pixel */
 static const int showbar            = 1;        /* 0 means no bar */
 static const int topbar             = 1;        /* 0 means bottom bar */
-static const char *fonts[]          = { "monospace:size=11" };
-static const char dmenufont[]       = "monospace:size=11";
+static const char *fonts[]          = { "monospace:size=12" };
+static const char dmenufont[]       = "monospace:size=12";
 static const char col_gray1[]       = "#2E3440";
 static const char col_gray2[]       = "#3B4252";
 static const char col_gray3[]       = "#D8DEE9";
@@ -75,9 +75,9 @@ static const char *autorandrcmd[] = { "/usr/bin/autorandr", "--force", "-c", NUL
 static const char *mutecmd[] = { "/home/brett/.local/bin/volume", "toggle", NULL };
 static const char *volupcmd[] = { "/home/brett/.local/bin/volume", "5%+", NULL };
 static const char *voldowncmd[] = { "/home/brett/.local/bin/volume", "5%-", NULL };
+static const char *miccmd[] = { "/home/brett/.local/bin/togglemic", NULL };
 static const char *blupcmd[] = { "xbacklight", "-inc", "5", NULL };
 static const char *bldowncmd[] = { "xbacklight", "-dec", "5", NULL };
-static const char *miccmd[] = { "/home/brett/.local/bin/togglemic", NULL };
 /* Spotify media controls */
 static const char *spotifyplaycmd[] = { "dbus-send", "--print-reply", "--dest=org.mpris.MediaPlayer2.spotify", "/org/mpris/MediaPlayer2", "org.mpris.MediaPlayer2.Player.PlayPause", NULL };
 static const char *spotifystopcmd[] = { "dbus-send", "--print-reply", "--dest=org.mpris.MediaPlayer2.spotify", "/org/mpris/MediaPlayer2", "org.mpris.MediaPlayer2.Player.Stop", NULL };
@@ -85,6 +85,7 @@ static const char *spotifyprevcmd[] = { "dbus-send", "--print-reply", "--dest=or
 static const char *spotifynextcmd[] = { "dbus-send", "--print-reply", "--dest=org.mpris.MediaPlayer2.spotify", "/org/mpris/MediaPlayer2", "org.mpris.MediaPlayer2.Player.Next", NULL };
 
 static const char *xkillcmd[] = { "xkill", NULL };
+static const char *lockscreencmd[] = { "xautolock", "-locknow", NULL };
 
 
 
@@ -108,7 +109,6 @@ static Key keys[] = {
 	{ MODKEY,                       XK_m,      setlayout,      {.v = &layouts[2]} },
 	{ MODKEY,                       XK_r,      setlayout,      {.v = &layouts[3]} },
 	{ MODKEY|ShiftMask,             XK_r,      setlayout,      {.v = &layouts[4]} },
-	/* { MODKEY,                       XK_space,  setlayout,      {0} }, */
 	{ MODKEY|ShiftMask,             XK_space,  togglefloating, {0} },
 	{ MODKEY,                       XK_0,      view,           {.ui = ~0 } },
 	{ MODKEY|ShiftMask,             XK_0,      tag,            {.ui = ~0 } },
@@ -117,6 +117,7 @@ static Key keys[] = {
 	{ MODKEY|ShiftMask,             XK_comma,  tagmon,         {.i = -1 } },
 	{ MODKEY|ShiftMask,             XK_period, tagmon,         {.i = +1 } },
 	{ MODKEY,                       XK_n,      togglealttag,   {0} },
+
 	TAGKEYS(                        XK_1,                      0)
 	TAGKEYS(                        XK_2,                      1)
 	TAGKEYS(                        XK_3,                      2)
@@ -126,6 +127,7 @@ static Key keys[] = {
 	TAGKEYS(                        XK_7,                      6)
 	TAGKEYS(                        XK_8,                      7)
 	TAGKEYS(                        XK_9,                      8)
+
 	{ MODKEY|ShiftMask|ControlMask, XK_q,      quit,           {0} },
 	{ MODKEY,                       XK_u,      focusurgent,    {0} },
 
@@ -148,6 +150,7 @@ static Key keys[] = {
 
 	{ MODKEY|ShiftMask, XK_q,     spawn, {.v = xkillcmd} },
 	{ MODKEY,           XK_space, spawn, {.v = roficmd} },
+	{ MODKEY|ShiftMask, XK_l,     spawn, {.v = lockscreencmd} },
 
 };
 
