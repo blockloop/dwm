@@ -5,13 +5,13 @@ static const unsigned int borderpx  = 1;        /* border pixel of windows */
 static const unsigned int snap      = 32;       /* snap pixel */
 static const int showbar            = 1;        /* 0 means no bar */
 static const int topbar             = 1;        /* 0 means bottom bar */
-static const char *fonts[]          = { "monospace:size=10" };
-static const char dmenufont[]       = "monospace:size=10";
-static const char col_gray1[]       = "#222222";
-static const char col_gray2[]       = "#444444";
-static const char col_gray3[]       = "#bbbbbb";
-static const char col_gray4[]       = "#eeeeee";
-static const char col_cyan[]        = "#005577";
+static const char *fonts[]          = { "monospace:size=11" };
+static const char dmenufont[]       = "monospace:size=11";
+static const char col_gray1[]       = "#2E3440";
+static const char col_gray2[]       = "#3B4252";
+static const char col_gray3[]       = "#D8DEE9";
+static const char col_gray4[]       = "#ECEFF4";
+static const char col_cyan[]        = "#5E81AC";
 static const char *colors[][3]      = {
 	/*               fg         bg         border   */
 	[SchemeNorm] = { col_gray3, col_gray1, col_gray2 },
@@ -19,7 +19,7 @@ static const char *colors[][3]      = {
 };
 
 /* tagging */
-static const char *tags[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
+static const char *tags[] = { "", "", "", "", "5", "6", "7", "", "9" };
 static const char *tagsalt[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
 
 static const Rule rules[] = {
@@ -70,6 +70,7 @@ static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() 
 static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
 static const char *roficmd[] = { "/usr/bin/rofi", "-show", "combi", NULL };
 static const char *termcmd[]  = { "st", NULL };
+static const char *autorandrcmd[] = { "/usr/bin/autorandr", "--force", "-c", NULL };
 /* function key commands */
 static const char *mutecmd[] = { "pactl", "set-sink-mute", "0", "toggle", NULL};
 static const char *volupcmd[] = { "pactl", "set-sink-volume", "0", "+5%", NULL };
@@ -77,6 +78,12 @@ static const char *voldowncmd[] = { "pactl", "set-sink-volume", "0", "-5%", NULL
 static const char *blupcmd[] = { "xbacklight", "-inc", "5", NULL };
 static const char *bldowncmd[] = { "xbacklight", "-dec", "5", NULL };
 static const char *miccmd[] = { "/home/brett/.local/bin/togglemic", NULL };
+/* Spotify media controls */
+static const char *spotifyplaycmd[] = { "dbus-send", "--print-reply", "--dest=org.mpris.MediaPlayer2.spotify", "/org/mpris/MediaPlayer2", "org.mpris.MediaPlayer2.Player.PlayPause", NULL };
+static const char *spotifystopcmd[] = { "dbus-send", "--print-reply", "--dest=org.mpris.MediaPlayer2.spotify", "/org/mpris/MediaPlayer2", "org.mpris.MediaPlayer2.Player.Stop", NULL };
+static const char *spotifyprevcmd[] = { "dbus-send", "--print-reply", "--dest=org.mpris.MediaPlayer2.spotify", "/org/mpris/MediaPlayer2", "org.mpris.MediaPlayer2.Player.Previous", NULL };
+static const char *spotifynextcmd[] = { "dbus-send", "--print-reply", "--dest=org.mpris.MediaPlayer2.spotify", "/org/mpris/MediaPlayer2", "org.mpris.MediaPlayer2.Player.Next", NULL };
+
 /*
  * static const char *mutecmd[] = { "amixer", "-q", "set", "Master", "toggle", NULL };
  * static const char *volupcmd[] = { "amixer", "-q", "set", "Master", "5%+", "unmute", NULL };
@@ -133,6 +140,15 @@ static Key keys[] = {
 	{ 0,                            XF86XK_MonBrightnessUp, spawn, {.v = blupcmd} },
 	{ 0,                            XF86XK_MonBrightnessDown, spawn, {.v = bldowncmd} },
 	{ 0,                            XF86XK_AudioMicMute, spawn, {.v = miccmd} },
+
+	{ 0 ,                           XF86XK_AudioPlay, spawn, {.v = spotifyplaycmd} },
+	{ MODKEY|ControlMask ,          XK_Return,        spawn, {.v = spotifyplaycmd} },
+	{ 0 ,                           XF86XK_AudioStop, spawn, {.v = spotifystopcmd} },
+	{ 0 ,                           XF86XK_AudioPrev, spawn, {.v = spotifyprevcmd} },
+	{ 0 ,                           XF86XK_AudioNext, spawn, {.v = spotifynextcmd} },
+
+	{ 0 ,                           XF86XK_Display, spawn, {.v = autorandrcmd} },
+	{ MODKEY|ShiftMask|ControlMask, XK_d,           spawn, {.v = autorandrcmd} },
 
 	{ MODKEY|ShiftMask,             XK_q,      spawn,        {.v = xkillcmd} },
 	{ MODKEY,                       XK_space,  spawn,        {.v = roficmd} },
