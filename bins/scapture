@@ -1,0 +1,24 @@
+#!/bin/bash
+
+set -ueo pipefail
+
+main() {
+	case ${1:-win} in
+		win*) exec import -screen -border -frame png:- | xclip -sel c -t image/png ;;
+		ar*) exec import png:- | xclip -sel c -t image/png ;;
+		sc*) exec import -window root png:- | xclip -sel c -t image/png ;;
+		h*) exec import -screen -border -frame png:- | xclip -sel c -t image/png ;;
+		*) usage && exit 1 ;;
+	esac
+}
+
+usage() {
+	echo $"Usage $(basename "$0") {win(dow)|ar(ea)|sc(reen)|h(elp)}"
+}
+
+command -v import &> /dev/null || {
+	echo $"You don't appear to have ImageMagick installed"
+	exit 1
+}
+
+main "${@}"

@@ -1,0 +1,15 @@
+#!/bin/bash
+
+set -ueo pipefail
+
+main () {
+	change="${1:-5%+}"
+	if [ "toggle" == "${change}" ]; then
+		amixer -q set Master toggle
+	else
+		amixer -q set Master "${change}" unmute
+	fi
+	refbar
+}
+
+main "${@}"

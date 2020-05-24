@@ -1,0 +1,173 @@
+#!/bin/bash
+set -ueo pipefail
+
+NC="^d^"
+GREEN="^c#A3BE8C^"
+RED="^c#BF616A^"
+GREY="^c#D8DEE9^"
+YELLOW="^c#EBCB8B^"
+
+print_all() {
+	print_spotify
+	print_weather
+	print_vpn
+	# print_cpu_load
+	print_utc_time
+	print_local_time
+	print_system | tr '\n' ' '
+}
+
+print_system() {
+	print_cpu_load
+	print_battery
+	print_mic
+	print_bluetooth
+	print_wifi
+	print_volume
+}
+
+print_vpn() {
+	if ip addr show wg0 &> /dev/null ; then
+		echo "${GREEN}"
+	fi
+}
+
+print_weather() {
+	cachedir="$HOME/.cache/weather"
+	mkdir -p "$cachedir" >/dev/null
+	# zipcode=$(curl -SLs https://freegeoip.app/json/ | jq -r '.zip_code')
+	zipcode=75032
+	cachefile="$cachedir/$zipcode"
+
+	find "$cachedir" -type f -amin +10 -delete
+	# -s means NON empty file
+	if [ -s "$cachefile" ]; then
+		cat "$cachefile"
+		return
+	fi
+
+	curl -f -w'\n' -SLs http://wttr.in/75032?format=j1 \
+		| jq -r '.current_condition[0] | "\(.temp_F)°F"' \
+	        | tee "$cachefile"
+		# | jq -r '.current_condition[0] | "\(.temp_F)°F \(.weatherDesc[].value)"' \
+
+	# curl -w'\n' -SLs https://icanhazweather.com/75032 \
+	# 	| awk -F' ' '{ print $1 }' \
+	# 	| tee "$cachefile"
+
+	# Cloudy       = "摒"
+	# Foggy        = "敖"
+	# Hail         = "晴"
+	# Lightning    = "朗"
+	# NightClear   = "望"
+	# PartlyCloudy = "杖"
+	# Pouring      = "歹"
+	# Rainy        = "殺"
+	# Snowy        = "流"
+	# Sunny        = "滛"
+	# Sunset       = "漢"
+	# Sunrise      = "瀞"
+	# Windy        = "煮"
+	# WindyCloud   = "瞧"
+}
+
+print_local_time() {
+	date '+%a %m.%d %-I:%M'
+}
+
+print_utc_time() {
+	echo -n 'UTC '
+	date -u '+%H:%M'
+}
+
+print_cpu_load() {
+	load="$(cut -d ' ' -f1 /proc/loadavg)"
+	cpus="$(nproc)"
+	[ "$(echo "$load < $cpus" | bc)" -eq 1 ] || echo "${RED} $load"
+}
+
+print_battery() {
+	stats=$(acpi -b | grep -v unavailable | tail -1)
+	perc=$(echo "${stats}" | awk '{ print $4 }' | \grep -oP '\d+')
+	status=$(echo "${stats}" | awk '{ print $3 }' | \grep -oP '[a-zA-Z]+')
+
+	[ "${status}" == "Charging" ] && echo "${GREEN}" && return
+	[ "${perc}" -gt 94 ] && echo "" && return
+	[ "${perc}" -gt 90 ] && echo "" && return
+	[ "${perc}" -gt 80 ] && echo "" && return
+	[ "${perc}" -gt 70 ] && echo "" && return
+	[ "${perc}" -gt 60 ] && echo "" && return
+	[ "${perc}" -gt 50 ] && echo "" && return
+	[ "${perc}" -gt 40 ] && echo "" && return
+	[ "${perc}" -gt 30 ] && echo "" && return
+	[ "${perc}" -gt 20 ] && echo "${YELLOW}" && return
+	echo "${RED}"
+}
+
+print_mic() {
+	capture_enabled="$(amixer get Capture |& grep -oP '\[o(ff|n)\]' | head -n1 | tr -d '[' | tr -d ']')"
+
+	if [ "$capture_enabled" = "on" ]; then
+		echo -e "\uf130"
+	else
+		echo -e "\uf131"
+	fi
+}
+
+print_bluetooth() {
+	if /usr/bin/bluetooth |& grep -q on ; then
+		echo -e "\uf5ae"
+	else
+		echo -e "\uf5b1"
+	fi
+
+}
+
+print_wifi() {
+	wifissid="$(nmcli --color=no -t -f NAME,type connection show --active | \grep -P '(wireless|ethernet)' | awk -F: '{ print $1 }')"
+	if [ -n "${wifissid}" ]; then
+		# wifiperc="$(grep "^\s*w" /proc/net/wireless | awk '{ print int($3 * 100 / 70) "%" }')"
+		# echo -e "\ufaa8 ${wifissid:0:10}"
+		echo -e "\ufaa8"
+	else
+		echo -e "\ufaa9"
+	fi
+}
+
+print_volume() {
+	mix=$(amixer get Master | tail -1)
+	vol="$(amixer get Master | tail -n1 | sed -r 's/.*\[(.*)%\].*/\1/')"
+	if [[ $mix == *\[off\]* ]]; then
+		echo -e "婢"
+	elif [[ $mix == *\[on\]* ]]; then
+		echo -e "墳${vol}%"
+	fi
+}
+
+print_spotify() {
+	declare -A STATUSES
+	STATUSES["Playing"]=""
+	STATUSES["Paused"]=""
+
+	if pidof spotify &>/dev/null; then
+
+		meta=$(dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.freedesktop.DBus.Properties.Get string:'org.mpris.MediaPlayer2.Player' string:'Metadata')
+		title=$(echo "${meta}" | grep xesam:title -A1 | tail -n1 | cut -d '"' -f 2)
+		artist=$(echo "${meta}" | grep xesam:artist -A2 | tail -n1 | cut -d '"' -f 2)
+
+		status=$(dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.freedesktop.DBus.Properties.Get string:'org.mpris.MediaPlayer2.Player' string:'PlaybackStatus' | tail -n1 | cut -d '"' -f2)
+		status="${STATUSES[$status]}"
+		if [ -z "${title}" ]; then
+			return
+		fi
+
+		long=" ${title} -  ${artist}"
+		echo "${long}" | awk 'length > 30{$0=substr($0,0,31)"..."}1'
+	fi
+}
+
+print_all \
+	| tr '\n' '&' \
+	| sed 's,&$, ,g' \
+	| sed "s,&,${GREY} · ${NC},g" \
+	| xargs -I{} xsetroot -name " {}"

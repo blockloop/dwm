@@ -1,0 +1,23 @@
+#!/bin/bash
+set -ueo pipefail
+
+main() {
+	sec=${1:-0}
+	if [ 0 -eq ${sec} ]; then
+		refresh
+	else
+		while true; do
+			refresh
+			sleep ${sec}
+		done
+	fi
+}
+
+refresh() {
+	{
+		pgrep -x dwm && command -v dbar && dbar
+	} &> /dev/null
+}
+
+
+main "$@"

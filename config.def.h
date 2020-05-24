@@ -72,10 +72,10 @@ static const char *roficmd[] = { "/usr/bin/rofi", "-show", "combi", NULL };
 static const char *termcmd[]  = { "st", NULL };
 static const char *autorandrcmd[] = { "/usr/bin/autorandr", "--force", "-c", NULL };
 /* function key commands */
-static const char *mutecmd[] = { "/home/brett/.local/bin/volume", "toggle", NULL };
-static const char *volupcmd[] = { "/home/brett/.local/bin/volume", "5%+", NULL };
-static const char *voldowncmd[] = { "/home/brett/.local/bin/volume", "5%-", NULL };
-static const char *miccmd[] = { "/home/brett/.local/bin/togglemic", NULL };
+static const char *mutecmd[] = { "volume", "toggle", NULL };
+static const char *volupcmd[] = { "volume", "5%+", NULL };
+static const char *voldowncmd[] = { "volume", "5%-", NULL };
+static const char *miccmd[] = { "togglemic", NULL };
 static const char *blupcmd[] = { "xbacklight", "-inc", "5", NULL };
 static const char *bldowncmd[] = { "xbacklight", "-dec", "5", NULL };
 /* Spotify media controls */
@@ -86,8 +86,8 @@ static const char *spotifynextcmd[] = { "dbus-send", "--print-reply", "--dest=or
 
 static const char *xkillcmd[] = { "xkill", NULL };
 static const char *lockscreencmd[] = { "xautolock", "-locknow", NULL };
-static const char *sswincmd[] = { "/home/brett/.local/bin/ss", "win", NULL };
-static const char *ssareacmd[] = { "/home/brett/.local/bin/ss", "area", NULL };
+static const char *sswincmd[] = { "scapture", "win", NULL };
+static const char *ssareacmd[] = { "scapture", "area", NULL };
 
 
 #include "focusurgent.c"

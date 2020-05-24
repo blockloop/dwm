@@ -1,0 +1,23 @@
+#!/bin/bash
+# set -x
+
+# toggle gets in a weird state where some devices will be on and some will be
+# off so toggle just flips them all, which is bad. This makes sure that all
+# devices are either on or off
+capture_enabled="$(amixer get Capture |& grep -oP '\[o(ff|n)\]' | head -n1)"
+mute=off
+# seems confusing, but capture_enabled means whether or not the microphone
+# capture is enabled, but mute is the inverse. If the capture is set to 'on'
+# then the mute needs to be set to 'on', which will set capture to 'off'
+[[ "$capture_enabled" =~ "on" ]] && mute="on"
+pacmd list-sources | \
+        grep -oP 'index: \d+' | \
+        sort | \
+        uniq | \
+        awk '{ print $2 }' | \
+        xargs -I{} pactl set-source-mute {} $mute
+capture_enabled="$(amixer get Capture |& grep -oP '\[o(ff|n)\]' | head -n1)"
+pkill -RTMIN+2 i3blocks
+
+# reload dbar if necessary
+refbar
