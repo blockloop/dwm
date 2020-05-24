@@ -86,7 +86,8 @@ static const char *spotifynextcmd[] = { "dbus-send", "--print-reply", "--dest=or
 
 static const char *xkillcmd[] = { "xkill", NULL };
 static const char *lockscreencmd[] = { "xautolock", "-locknow", NULL };
-
+static const char *sswincmd[] = { "/home/brett/.local/bin/ss", "win", NULL };
+static const char *ssareacmd[] = { "/home/brett/.local/bin/ss", "area", NULL };
 
 
 #include "focusurgent.c"
@@ -151,6 +152,8 @@ static Key keys[] = {
 	{ MODKEY|ShiftMask, XK_q,     spawn, {.v = xkillcmd} },
 	{ MODKEY,           XK_space, spawn, {.v = roficmd} },
 	{ MODKEY|ShiftMask, XK_l,     spawn, {.v = lockscreencmd} },
+	{ MODKEY|ShiftMask, XK_a,     spawn, {.v = ssareacmd} },
+	{ MODKEY|ShiftMask, XK_w,     spawn, {.v = sswincmd} },
 
 };
 
