@@ -1,10 +1,11 @@
 #!/bin/bash
 set -ueo pipefail
 
-NC="^d^"
+RESET="^d^"
+CYAN="^c#81A1C1^"
 GREEN="^c#A3BE8C^"
 RED="^c#BF616A^"
-GREY="^c#D8DEE9^"
+GREY="^c#4C566A^"
 YELLOW="^c#EBCB8B^"
 
 print_all() {
@@ -18,12 +19,12 @@ print_all() {
 }
 
 print_system() {
+	print_volume
 	print_cpu_load
 	print_battery
 	print_mic
 	print_bluetooth
 	print_wifi
-	print_volume
 }
 
 print_vpn() {
@@ -137,11 +138,20 @@ print_wifi() {
 print_volume() {
 	mix=$(amixer get Master | tail -1)
 	vol="$(amixer get Master | tail -n1 | sed -r 's/.*\[(.*)%\].*/\1/')"
+	echo -n '[VOL:'
 	if [[ $mix == *\[off\]* ]]; then
-		echo -e "婢"
-	elif [[ $mix == *\[on\]* ]]; then
-		echo -e "墳${vol}%"
+		echo -n ' OFF'
+	# elif [[ $mix == *\[on\]* ]]; then
+	# 	echo -e "VOL ${vol}%"
+	else
+		for n in 20 40 60 80; do
+			color=${RESET}
+			if [ "${vol}" -lt "${n}" ]; then color=${GREY}; fi
+			echo -ne "${color}"'\u275A'
+		done
 	fi
+
+	echo "${RESET}]"
 }
 
 print_spotify() {
@@ -169,5 +179,5 @@ print_spotify() {
 print_all \
 	| tr '\n' '&' \
 	| sed 's,&$, ,g' \
-	| sed "s,&,${GREY} · ${NC},g" \
+	| sed "s,&,${CYAN}｜${RESET},g" \
 	| xargs -I{} xsetroot -name " {}"
