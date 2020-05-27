@@ -5,8 +5,8 @@ static const unsigned int borderpx  = 1;        /* border pixel of windows */
 static const unsigned int snap      = 32;       /* snap pixel */
 static const int showbar            = 1;        /* 0 means no bar */
 static const int topbar             = 1;        /* 0 means bottom bar */
-static const char *fonts[]          = { "monospace:size=13" };
-static const char dmenufont[]       = "monospace:size=13";
+static const char dmenufont[]       = "TerminessTTF Nerd Font Mono:size=15";
+static const char *fonts[]          = { "TerminessTTF Nerd Font Mono:size=15" };
 static const char col_gray1[]       = "#2E3440";
 static const char col_gray2[]       = "#3B4252";
 static const char col_gray3[]       = "#D8DEE9";
@@ -46,11 +46,12 @@ static const int resizehints = 1;    /* 1 means respect size hints in tiled resi
 static const Layout layouts[] = {
 	/* symbol     arrange function */
 	/* first entry is default */
-	{ "[@]",      spiral },
-	{ "[\\]",     dwindle },
-	{ "[]=",      tile },    
-	{ "><>",      NULL },    /* no layout function means floating behavior */
-	{ "[M]",      monocle },
+	{ "[@]",  spiral  },
+	{ "[\\]", dwindle },
+	{ "[]=",  tile    },
+	{ "><>",  NULL    }, /* no layout function means floating behavior */
+	{ "[M]",  monocle },
+	{ NULL,   NULL    },
 };
 
 /* key definitions */
@@ -110,6 +111,8 @@ static Key keys[] = {
 	{ MODKEY,                       XK_m,      setlayout,      {.v = &layouts[2]} },
 	{ MODKEY,                       XK_r,      setlayout,      {.v = &layouts[3]} },
 	{ MODKEY|ShiftMask,             XK_r,      setlayout,      {.v = &layouts[4]} },
+        { MODKEY|ControlMask,           XK_comma,  cyclelayout,    {.i = -1 } },
+        { MODKEY|ControlMask,           XK_period, cyclelayout,    {.i = +1 } },
 	{ MODKEY|ShiftMask,             XK_space,  togglefloating, {0} },
 	{ MODKEY,                       XK_0,      view,           {.ui = ~0 } },
 	{ MODKEY|ShiftMask,             XK_0,      tag,            {.ui = ~0 } },
