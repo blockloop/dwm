@@ -46,12 +46,14 @@ static const int resizehints = 1;    /* 1 means respect size hints in tiled resi
 static const Layout layouts[] = {
 	/* symbol     arrange function */
 	/* first entry is default */
-	{ "[@]",  spiral  },
-	{ "[\\]", dwindle },
-	{ "[]=",  tile    },
-	{ "><>",  NULL    }, /* no layout function means floating behavior */
-	{ "[M]",  monocle },
-	{ NULL,   NULL    },
+	{ "[@]",  spiral                 },
+	{ "[\\]", dwindle                },
+	{ "[]=",  tile                   },
+	{ "><>",  NULL                   }, /* no layout function means floating behavior */
+	{ "[M]",  monocle                },
+	{ "|M|",  centeredmaster         },
+	{ ">M>",  centeredfloatingmaster },
+	{ NULL,   NULL                   },
 };
 
 /* key definitions */
@@ -111,6 +113,8 @@ static Key keys[] = {
 	{ MODKEY,                       XK_m,      setlayout,      {.v = &layouts[2]} },
 	{ MODKEY,                       XK_r,      setlayout,      {.v = &layouts[3]} },
 	{ MODKEY|ShiftMask,             XK_r,      setlayout,      {.v = &layouts[4]} },
+	{ MODKEY,                       XK_u,      setlayout,      {.v = &layouts[5]} },
+	{ MODKEY,                       XK_o,      setlayout,      {.v = &layouts[6]} },
         { MODKEY|ControlMask,           XK_comma,  cyclelayout,    {.i = -1 } },
         { MODKEY|ControlMask,           XK_period, cyclelayout,    {.i = +1 } },
 	{ MODKEY|ShiftMask,             XK_space,  togglefloating, {0} },
